@@ -43,7 +43,7 @@ public class UserController {
     @PutMapping(value = "/users")
     public User update(@RequestBody User user) {
         if (validator(user)) {
-                if(users.get(user.getId() - 1) != null) {
+                if (users.get(user.getId() - 1) != null) {
                     users.set(user.getId() - 1, user);
                     log.info("Обновлен пользователь " + user.toString());
                     return user;
