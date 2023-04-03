@@ -4,8 +4,6 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +22,9 @@ public class FilmController {
     }
 
     @PostMapping(value = "/films")
-    public Film create(@RequestBody Film film) {
+    public Film create(@RequestBody Film film){
         if (validator(film)){
-            for (int i = 0; i < films.size(); i++) {
+            for (int i = 0; i < films.size(); i++){
                 boolean isExist = films.get(i).equals(film);
                 if(isExist) throw new UserAlreadyExistException();;
                 log.info("Уже есть такой фильм " + film.toString());
@@ -44,23 +42,23 @@ public class FilmController {
 
     @PutMapping(value = "/films")
     public Film update(@RequestBody Film film) throws ValidationException {
-        if (validator(film)){
-                if(films.get(film.getId()- 1) != null) {
-                    films.set(film.getId()- 1, film);
+        if(validator(film)){
+                if(films.get(film.getId()-1) != null){
+                    films.set(film.getId()-1, film);
                     log.info("Обновлен кинчик " + film.toString());
                     return film;
-                } else {
+                }else{
                     log.error("не найден фильм " + film.toString());
                     throw new ValidationException("не найден фильм");
                 }
-        } else {
+        }else{
             log.error("не прошел валидацию фильм  " + film.toString());
             throw new ValidationException("не прошел валидацию");
         }
     }
 
     public boolean validator (Film film){
-        return !film.getName().isEmpty() && film.getDescription().length() < 201 && film.getReleaseDate().isAfter(firstMovieDate) &&
-                film.getDuration() > 0;
+        return !film.getName().isEmpty() && film.getDescription().length()<201 && film.getReleaseDate().isAfter(firstMovieDate) &&
+                film.getDuration()>0;
     }
 }
