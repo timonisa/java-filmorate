@@ -23,10 +23,10 @@ public class UserController {
 
     @PostMapping(value = "/users")
     public User create(@RequestBody User user) {
-        if(validator(user)){
+        if (validator(user)) {
             for (int i = 0; i < users.size(); i++) {
                 boolean isExist = users.get(i).equals(user);
-                if(isExist) throw new UserAlreadyExistException();;
+                if (isExist) throw new UserAlreadyExistException();
                 log.info("Уже есть такой пользователь " + user.toString());
             }
             user.setId(nextId);
@@ -42,9 +42,9 @@ public class UserController {
 
     @PutMapping(value = "/users")
     public User update(@RequestBody User user) {
-        if(validator(user)) {
-                if(users.get(user.getId()- 1) != null) {
-                    users.set(user.getId()- 1, user);
+        if (validator(user)) {
+                if(users.get(user.getId() - 1) != null) {
+                    users.set(user.getId() - 1, user);
                     log.info("Обновлен пользователь " + user.toString());
                     return user;
                 } else {
@@ -58,7 +58,7 @@ public class UserController {
         }
     }
 
-    public boolean validator (User user) {
+    public boolean validator(User user) {
         if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
