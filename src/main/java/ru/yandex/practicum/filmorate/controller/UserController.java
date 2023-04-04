@@ -15,7 +15,6 @@ public class UserController {
     int nextId = 1;
     private final List<User> users = new ArrayList<>();
 
-
     @GetMapping("/users")
     public List<User> getUsers() {
         return users;

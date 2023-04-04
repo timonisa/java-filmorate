@@ -16,7 +16,6 @@ public class FilmController {
     int nextId = 1;
     private final List<Film> films = new ArrayList<>();
 
-
     @GetMapping("/films")
     public List<Film> getFilms() {
         return films;
