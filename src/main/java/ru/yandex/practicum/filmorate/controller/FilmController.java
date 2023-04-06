@@ -27,7 +27,7 @@ public class FilmController {
     @PostMapping(value = "/films")
     public Film create(@RequestBody Film film) {
         if (validator(film)) {
-            if (films.get(film.getId()) != null){
+            if (films.get(film.getId()) != null) {
                 log.info("Уже есть такой фильм " + film.toString());
                 throw new FilmAlreadyExistException();
             }
