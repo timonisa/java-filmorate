@@ -1,35 +1,37 @@
 package ru.yandex.practicum.filmorate.controller;
 
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UserAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
 
 @RestController
 @Slf4j
 public class UserController {
-    int nextId = 1;
-    private final List<User> users = new ArrayList<>();
+    private int nextId = 1;
+    private final HashMap<Integer, User> users = new HashMap<>();
 
     @GetMapping("/users")
-    public List<User> getUsers() {
-        return users;
+    public Collection<User> getUsers() {
+        return users.values();
     }
 
     @PostMapping(value = "/users")
     public User create(@RequestBody User user) {
         if (validator(user)) {
-            for (int i = 0; i < users.size(); i++) {
-                boolean isExist = users.get(i).equals(user);
-                if (isExist) throw new UserAlreadyExistException();
+            if (users.get(user.getId()) != null) {
                 log.info("Уже есть такой пользователь " + user.toString());
+                throw new UserAlreadyExistException();
             }
             user.setId(nextId);
-            users.add(user);
+            users.put(user.getId(), user);
             nextId++;
             log.info("Добавлен пользователь " + user.toString());
             return user;
@@ -42,25 +44,25 @@ public class UserController {
     @PutMapping(value = "/users")
     public User update(@RequestBody User user) {
         if (validator(user)) {
-                if (users.get(user.getId() - 1) != null) {
-                    users.set(user.getId() - 1, user);
-                    log.info("Обновлен пользователь " + user.toString());
-                    return user;
-                } else {
-                    log.error("не найден пользователь " + user.toString());
-                    throw new ValidationException("не найден пользователь");
-                }
-
+            if (users.get(user.getId()) != null) {
+                users.put(user.getId(), user);
+                log.info("Обновлен пользователь " + user.toString());
+                return user;
+            } else {
+                log.error("не найден пользователь " + user.toString());
+                throw new UserAlreadyExistException("не найден пользователь");
+            }
         } else {
             log.error("не прошел валидацию пользователь " + user.toString());
             throw new ValidationException("не прошел валидацию");
         }
     }
 
-    public boolean validator(User user) {
+    private boolean validator(@NonNull User user) {
         if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
-        return !user.getLogin().isEmpty() && !user.getLogin().contains(" ") && user.getBirthday().isBefore(LocalDate.now());
+        return !user.getLogin().isEmpty() && user.getEmail().contains("@")&& !user.getEmail().isEmpty()
+                && !user.getLogin().contains(" ") && user.getBirthday().isBefore(LocalDate.now());
     }
 }
