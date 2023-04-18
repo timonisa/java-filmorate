@@ -15,54 +15,20 @@ import java.util.HashMap;
 @RestController
 @Slf4j
 public class UserController {
-    private int nextId = 1;
-    private final HashMap<Integer, User> users = new HashMap<>();
+
 
     @GetMapping("/users")
     public Collection<User> getUsers() {
-        return users.values();
+        return null;
     }
 
     @PostMapping(value = "/users")
     public User create(@RequestBody User user) {
-        if (validator(user)) {
-            if (users.get(user.getId()) != null) {
-                log.info("Уже есть такой пользователь " + user.toString());
-                throw new UserAlreadyExistException();
-            }
-            user.setId(nextId);
-            users.put(user.getId(), user);
-            nextId++;
-            log.info("Добавлен пользователь " + user.toString());
-            return user;
-        } else {
-            log.error("не прошел валидацию пользователь " + user.toString());
-            throw new ValidationException("не прошел валидацию");
-        }
+        return user;
     }
 
     @PutMapping(value = "/users")
     public User update(@RequestBody User user) {
-        if (validator(user)) {
-            if (users.get(user.getId()) != null) {
-                users.put(user.getId(), user);
-                log.info("Обновлен пользователь " + user.toString());
-                return user;
-            } else {
-                log.error("не найден пользователь " + user.toString());
-                throw new UserAlreadyExistException("не найден пользователь");
-            }
-        } else {
-            log.error("не прошел валидацию пользователь " + user.toString());
-            throw new ValidationException("не прошел валидацию");
-        }
-    }
-
-    private boolean validator(@NonNull User user) {
-        if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-        }
-        return !user.getLogin().isEmpty() && user.getEmail().contains("@") && !user.getEmail().isEmpty()
-                && !user.getLogin().contains(" ") && user.getBirthday().isBefore(LocalDate.now());
+        return user;
     }
 }

@@ -4,11 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Data
 @Builder
 public class User {
+    private Set<Long> friends;
     private Integer id;
     private String email;
     private String login;
