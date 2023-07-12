@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -16,7 +18,6 @@ import java.util.HashMap;
 public class InMemoryFilmStorage implements FilmStorage{
     private int nextId = 1;
     private final LocalDate firstMovieDate = LocalDate.parse("1895-12-28");
-    @Autowired
     private final HashMap<Integer, Film> films = new HashMap<>();
 
     @Override

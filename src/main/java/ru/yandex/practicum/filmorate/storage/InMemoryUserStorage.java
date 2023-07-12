@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -16,8 +17,18 @@ import java.util.HashMap;
 @Slf4j
 public class InMemoryUserStorage implements UserStorage{
     private int nextId = 1;
-    @Autowired
     private final HashMap<Integer, User> users = new HashMap<>();
+
+    @Override
+    public HashMap<Integer, User> getUsers() {
+        return users;
+    }
+
+    @Override
+    public User getUsersById(int id) {
+        return users.get(id);
+    }
+
     @Override
     public User create(User user) {
         if (validator(user)) {
@@ -62,6 +73,7 @@ public class InMemoryUserStorage implements UserStorage{
             return true;
         }
     }
+
 
     private boolean validator(@NonNull User user) {
         if (user.getName() == null || user.getName().isEmpty()) {

@@ -16,4 +16,10 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private Integer duration;
+
+    public int likesSize(){
+        return likes.size();
+    }
 }
+
+
